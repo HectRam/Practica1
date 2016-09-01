@@ -23,9 +23,9 @@ public class Practica1 {
         Scanner s = new Scanner(System.in);
         String thisLine,dir,a=".asm",ax;
         thisLine = null;
-        int poslin,c=0;
+        int poslin,c=0,pos=0;
         
-        String etiqueta = null, codop = null, operando = null, comentario=null,instruccion= null,linToken=null,auxcod=null;
+        String etiqueta = null, codop = null, operando = null, comentario=null,linToken=null,exEt=null;
         Vector<String> cadena;
         cadena = new Vector<>();
         System.out.print("Ruta del archivo? ");
@@ -43,7 +43,7 @@ public class Practica1 {
             espacio = false;
             
             
-            //System.out.println(" Linea  Etiqueta  Codop    Oper");
+             System.out.println("Linea----ETQ-----CODOP-----OPER---");
             
              while((thisLine = lectb.readLine()) != null){ //empieza a leer las lineas en loop
                         codop=" ";
@@ -109,7 +109,7 @@ public class Practica1 {
                          
                          StringTokenizer aucod = new StringTokenizer(linToken);
                          codop=aucod.nextToken();
-                         System.out.println("Es codop   "+codop);
+                         //System.out.println("Es codop   "+codop);
                          
                          
                          }
@@ -120,13 +120,13 @@ public class Practica1 {
                                  if(codop!=" "&&linToken!=codop){
                                   
                                      operando=linToken;
-                                     System.out.println("Operando  "+operando);
+                                    // System.out.println("Operando  "+operando);
                                      if(codop.equals(" ")){
                                          
                                          codop=linToken;
                                          
                                          
-                                         System.out.println("Codop2   "+codop);
+                                         //System.out.println("Codop2   "+codop);
                                          operando=" ";
                                          
                                      }
@@ -142,6 +142,27 @@ public class Practica1 {
                                       */
                                      thisLine.split("\\s");
                                      
+                                     if(espacio==false)
+                                     {
+                                         pos=thisLine.indexOf(' ');
+                                         exEt=thisLine.substring(0,pos);
+                                         
+                                         if(thisLine.matches("^[A-Za-z]{1}[\\w]{0,8}")&&linToken!=codop&&linToken.matches("^[A-Za-z]{1}[\\w]{0,8}")&&exEt.matches("^[A-Za-z]{1}[\\w]{0,8}"))
+                                         {
+                         
+                                           if(linToken.equals(exEt)){
+                                               
+                                               etiqueta=linToken;
+                                               System.out.println("etiqueta  "+etiqueta);
+                                               
+                                               
+                                              
+                                           }      
+  
+                                         }
+                                     }
+                                     
+                                     cadena.clear();
                                      
                                      
                                  }
@@ -155,7 +176,16 @@ public class Practica1 {
                         
                         
                         
-                   }   
+                   }
+                   if(etiqueta==" "){
+                     etiqueta="null";
+                     }
+                   if(operando==" "){
+                     etiqueta="null";
+                     }
+                  
+                   System.out.println(c+"  ee  "+etiqueta+"  cc  "+codop+"  oo  "+operando);
+                   
                        // System.out.println(thisLine);//muestra temporal
                        /*if("END".equals(thisLine = lectb.readLine())){//verifica si tiene End
                            banEnd = true;
