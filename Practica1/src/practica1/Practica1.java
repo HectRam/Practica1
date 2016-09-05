@@ -25,7 +25,7 @@ public class Practica1 {
         thisLine = null;
         int poslin,c=0,pos=0;
         
-        String etiqueta = null, codop = null, operando = null, comentario=null,linToken=null,exEt=null;
+        String etiqueta = null, codop = null, operando = null, comentario=null,linToken=null,exEt=null,etiquetaaux2=null;
         Vector<String> cadena;
         cadena = new Vector<>();
         System.out.print("Ruta del archivo? ");
@@ -43,14 +43,15 @@ public class Practica1 {
             espacio = false;
             
             
-             System.out.println("Linea----ETQ-----CODOP-----OPER---");
+             System.out.println("Linea---ETQ-----CODOP-----OPER---");
             
              while((thisLine = lectb.readLine()) != null){ //empieza a leer las lineas en loop
                         codop=" ";
 	            	operando=" ";
 	            	etiqueta=" ";
 	                c++;
-                       comentario=" ";      
+                       comentario=" ";    
+                       etiquetaaux2=" ";
                  //  System.out.println("Linea       \n"+thisLine);
                    
                    StringTokenizer Token = new StringTokenizer(thisLine);
@@ -105,28 +106,44 @@ public class Practica1 {
                          /**
                          * Entra Codop
                          */
-                             if(linToken.matches("^[a-zA-Z].[/.]{0,1}.${1,5}")){
+                                if(linToken.matches("^[a-zA-Z]{2,4}(?!\\d )[/.]{0,1}[a-zA-Z]$")&&espacio==false){
                          
                          StringTokenizer aucod = new StringTokenizer(linToken);
                          codop=aucod.nextToken();
-                         //System.out.println("Es codop   "+codop);
+                      // System.out.println("Es codop   "+codop);
                          
+                        if(codop.matches("^[a-z]{1,4}")&&!"equ".equals(codop)){
+                            etiqueta=codop;
+                            
+                            
+                        }
                          
                          }
                              else{
                                  /**
                                   * Entra Operando
-                                  */
+                                  */  
+                     /**
+                       
+                      if(linToken.matches("^[a-z](?!\\d ){0,}[/.]{0,1}.{1,5}")){
+                        
+                        
+                             System.out.println("residuo cod "+linToken);
+                             
+                                      }
+                      */               
+                                
                                  if(codop!=" "&&linToken!=codop){
                                   
                                      operando=linToken;
                                     // System.out.println("Operando  "+operando);
+                                    
                                      if(codop.equals(" ")){
                                          
                                          codop=linToken;
                                          
                                          
-                                         //System.out.println("Codop2   "+codop);
+                                       //  System.out.println("Codop2   "+codop);
                                          operando=" ";
                                          
                                      }
@@ -147,13 +164,13 @@ public class Practica1 {
                                          pos=thisLine.indexOf(' ');
                                          exEt=thisLine.substring(0,pos);
                                          
-                                         if(thisLine.matches("^[A-Za-z]{1}[\\w]{0,8}")&&linToken!=codop&&linToken.matches("^[A-Za-z]{1}[\\w]{0,8}")&&exEt.matches("^[A-Za-z]{1}[\\w]{0,8}"))
+                                         if(thisLine.matches("^[A-Za-z]{1}{0,8}.*")&&linToken!=codop&&linToken.matches("^[A-Za-z]{0,8}.*")&&exEt.matches("^[A-Za-z]{0,8}.*")||thisLine.matches("^[_].*")&&linToken!=codop&&linToken.matches("^[_].*")&&exEt.matches("^[_].*"))
                                          {
                          
                                            if(linToken.equals(exEt)){
                                                
                                                etiqueta=linToken;
-                                               System.out.println("etiqueta  "+etiqueta);
+                                         //      System.out.println("etiqueta  "+etiqueta);
                                                
                                                
                                               
@@ -177,16 +194,20 @@ public class Practica1 {
                         
                         
                    }
-                   if(etiqueta==" "){
-                     etiqueta="null";
-                     }
+                   if(codop==" "){
+                       codop="null";
+                   }
+                   if(etiqueta==" ")
+                   {
+                       etiqueta="null";
+                   }
                    if(operando==" "){
-                     etiqueta="null";
+                     operando="null";
                      }
                   
                    System.out.println(c+"  ee  "+etiqueta+"  cc  "+codop+"  oo  "+operando);
-                   
-                       // System.out.println(thisLine);//muestra temporal
+                  
+                     //   System.out.println(thisLine);//muestra temporal
                        /*if("END".equals(thisLine = lectb.readLine())){//verifica si tiene End
                            banEnd = true;
                        }
