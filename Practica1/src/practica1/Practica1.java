@@ -12,18 +12,20 @@ package practica1;
  * @author Hector
  */
 import java.io.*;
+import java.io.BufferedReader;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.io.FileReader;
 public class Practica1 {
-
+     
     /**
      * @param args the command line arguments
      */
     public void leer()
     {
         Scanner s = new Scanner(System.in);
-        String thisLine,dir,a=".asm",ax=null;
+        String thisLine,dir,a=".asm",b=".err",i=".inst",ax=null;
         thisLine = null;
         int poslin=0,c=0,pos=0;
         
@@ -39,14 +41,26 @@ public class Practica1 {
              FileInputStream fstr = new FileInputStream(dir+a);
              DataInputStream input = new DataInputStream(fstr);
             BufferedReader lectb = new BufferedReader(new InputStreamReader(input));
+            //escribe en el archivo errores
+            File ins =new File(dir+i);
+            FileWriter fwins=new FileWriter(ins,true);
+            BufferedWriter instrucciones=new BufferedWriter(fwins);
+            File f =new File(dir+b);
+            FileWriter fw=new FileWriter(f,true);
+            BufferedWriter error=new BufferedWriter(fw);
+            //escribe en el archivo comentarios
+            File f2com =new File("comentarios"+a);
+            FileWriter fwcom=new FileWriter(f2com,true);
+            BufferedWriter comentarios=new BufferedWriter(fwcom);
            // StringTokenizer Token = new StringTokenizer(dir+a);
             boolean banEnd,espacio,banCom;
             banEnd = false;
             espacio = false;
             banCom= false;
             
-             System.out.println("Linea---ETQ-----CODOP-----OPER---");
-            
+             //System.out.println("Linea---ETQ-----CODOP-----OPER---");
+            instrucciones.write("Linea---ETQ-----CODOP-----OPER---");
+            instrucciones.newLine();
              while((thisLine = lectb.readLine()) != null && banEnd != true){ //empieza a leer las lineas en loop
                         codop=" ";
 	            	operando=" ";
@@ -55,7 +69,6 @@ public class Practica1 {
                        comentario=" ";    
                        
                   // System.out.println("Linea       \n"+thisLine);
-                  // System.out.println("aqui "+linToken);
                    StringTokenizer Token = new StringTokenizer(thisLine);
                    
                    while(Token.hasMoreTokens())
@@ -64,15 +77,7 @@ public class Practica1 {
                    linToken=Token.nextToken();
                     
                    
-                 
-                  /**
-                   * 
-                   * if(thisLine.charAt(0) == ';'){
-                   * System.out.println("Comentario");   
-                   * } 
-                   * la linea sacada de nexToken
-                   */
-                     //  System.out.println("Token: "+linToken);
+
                   if(thisLine.charAt(0) == ' ' || thisLine.charAt(0) == '\t'){
                              
                             
@@ -99,8 +104,9 @@ public class Practica1 {
                              ax=at.nextToken();
                      //      System.out.println("Ax    "+ax);
                             cadena.add(ax);
-                         
+                           comentarios.write(ax+" ");
                          }
+                         comentarios.newLine();
                          linToken=" ";
                          banCom= true;
                      }
@@ -156,7 +162,9 @@ public class Practica1 {
                                          codop=linToken;
                                          
                                          
-                                        System.err.println("Error Linea: "+c+"Hubo un error en el operando "+codop);
+                                       // System.err.println("Error Linea: "+c+"Hubo un error en el operando "+codop);
+                                        error.write("Error Linea: "+c+" Hubo un error en el operando "+codop);
+                                        error.newLine();
                                          operando=" ";
                                          
                                      }
@@ -170,7 +178,7 @@ public class Practica1 {
                                       * Espacio
                                       */
                                      
-                                     thisLine.split("\\s");
+                                   //  thisLine.split("\\s");
                                      
                                      if(espacio==false)
                                      {
@@ -232,11 +240,26 @@ public class Practica1 {
                      operando="null";
                      }
                   if(codop!= "null"){
-                  System.out.println(c+"  ee  "+etiqueta+"  cc  "+codop+"  oo  "+operando);
+                      
+                  //System.out.println(c+"  ee  "+etiqueta+"  cc  "+codop+"  oo  "+operando);
+                  instrucciones.write(c+"      "+etiqueta+"      "+codop+"      "+operando);
+                  instrucciones.newLine();
                   }
-                  if(operando!="null"&&codop=="null"&&etiqueta!="null"||operando=="null"&&codop=="null"&&etiqueta!="null"||operando!="null"&&codop=="null"&&etiqueta=="null")
+                  if(operando!="null"&&codop=="null"&&etiqueta!="null")
                   {
-                      System.out.println("Linea: "+c+" Error no se puede tener tener etiqueta u operando sin codop");
+                     // System.out.println("Linea: "+c+" Error no se puede tener tener etiqueta u operando sin codop");
+                      error.write("Linea: "+c+" Error no se puede tener tener etiqueta y operando sin codop ");
+                      error.newLine();
+                      
+                  }
+                  if(operando=="null"&&codop=="null"&&etiqueta!="null"){
+                     error.write("Linea: "+c+" Error no se puede tener tener etiqueta sin codop");
+                     error.newLine();
+                  }
+                  if(operando!="null"&&codop=="null"&&etiqueta=="null")
+                  {
+                      error.write("Linea: "+c+" Error no se puede tener tener operando sin codop");
+                      error.newLine();
                   }
                      //  System.out.println(thisLine);//muestra temporal
                      banCom=false;
@@ -245,12 +268,20 @@ public class Practica1 {
                        }
                       else if(banEnd != false)
                        {
-                           System.err.println("Error: no se encontro el final del archivo(End)");
+                         //  System.err.println("Linea: "+c+"Error: no se encontro el final del archivo(End)");
+                          error.write("Linea: "+c+"Error: no se encontro el final del archivo(End)");
+                           error.newLine();
                        }
                     }
-                //System.out.println("Fin del recorrido");              
+                //System.out.println("Fin del recorrido");   
+             //  fw.close();
+             comentarios.close();
+               error.close();
+               instrucciones.close();
+            //   comentarios.close();
                 }catch(Exception e){
-                    System.err.println("Hubo un error \n"+e);
+                    System.err.println("Hubo un error en el codigo\n"+e);
+                    
     }
         
         
@@ -261,5 +292,6 @@ public class Practica1 {
         Practica1 H = new Practica1();
          H.leer();
     }
+
     
 }
