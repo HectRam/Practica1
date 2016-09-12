@@ -18,17 +18,19 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.io.FileReader;
 public class Practica1 {
-     
+    
     /**
      * @param args the command line arguments
      */
+    
     public void leer()
     {
+        
         Scanner s = new Scanner(System.in);
         String thisLine,dir,a=".asm",b=".err",i=".inst",ax=null;
         thisLine = null;
         int poslin=0,c=0,pos=0;
-        
+        espacios es;
         String etiqueta = null, codop = null, operando = null, comentario=null,linToken=null,exEt=null;
         Vector<String> cadena;
         cadena = new Vector<>();
@@ -41,10 +43,11 @@ public class Practica1 {
              FileInputStream fstr = new FileInputStream(dir+a);
              DataInputStream input = new DataInputStream(fstr);
             BufferedReader lectb = new BufferedReader(new InputStreamReader(input));
-            //escribe en el archivo errores
+            //escribe en el archivo inst
             File ins =new File(dir+i);
             FileWriter fwins=new FileWriter(ins,true);
             BufferedWriter instrucciones=new BufferedWriter(fwins);
+            //escribe en el archivo errores
             File f =new File(dir+b);
             FileWriter fw=new FileWriter(f,true);
             BufferedWriter error=new BufferedWriter(fw);
@@ -62,6 +65,7 @@ public class Practica1 {
             instrucciones.write("Linea---ETQ-----CODOP-----OPER---");
             instrucciones.newLine();
              while((thisLine = lectb.readLine()) != null && banEnd != true){ //empieza a leer las lineas en loop
+                        es = new espacios();
                         codop=" ";
 	            	operando=" ";
 	            	etiqueta=" ";
@@ -77,8 +81,8 @@ public class Practica1 {
                    linToken=Token.nextToken();
                     
                    
-
-                  if(thisLine.charAt(0) == ' ' || thisLine.charAt(0) == '\t'){
+                     espacio = es.spacio(thisLine);
+                 /* if(thisLine.charAt(0) == ' ' || thisLine.charAt(0) == '\t'){
                              
                             
                             espacio = true; 
@@ -87,7 +91,7 @@ public class Practica1 {
                          }
                   else{
                       espacio = false;
-                  }
+                  }*/
                  /**
                   * comentario (empiezan con ; puede ir seguido de cualquier digito  del cero al nueve, cualquier caracter de la 'a' a la 'z' incluyendo mayusculas )
                   */
@@ -291,6 +295,7 @@ public class Practica1 {
         // TODO code application logic here
         Practica1 H = new Practica1();
          H.leer();
+        
     }
 
     
